@@ -2,7 +2,6 @@ from django.shortcuts import get_object_or_404, render
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from .choices import category_choices, city_choices
 from .models import Listing
-from categories.models import Category
 
 def index(request):
     listings = Listing.objects.order_by('-list_date').filter(is_published=True)
@@ -23,7 +22,6 @@ def listing(request, listing_id):
 
 def search(request):
     queryset_list = Listing.objects.order_by('-list_date')
-    categories = Category.objects.all()
 
     # Keywords
     if 'keywords' in request.GET:
@@ -43,11 +41,11 @@ def search(request):
         if price:
             queryset_list = queryset_list.filter(price__lte=price)
     
-    # Category
-    if 'category' in request.GET:
-        category = request.GET['category']
-        if category:
-            queryset_list = queryset_list.filter(categories__iexact=category)
+    # # Category
+    # if 'category' in request.GET:
+    #     category = request.GET['category']
+    #     if category:
+    #         queryset_list = queryset_list.filter(categories__iexact=category)
 
     context = {
         'city_choices' : city_choices,
